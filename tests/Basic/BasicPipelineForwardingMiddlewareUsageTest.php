@@ -1,0 +1,116 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhPhD\Pipeline\Tests\Basic;
+
+use PhPhD\Pipeline\Messenger\ForwardingMiddleware;
+use PhPhD\Pipeline\Tests\Basic\Stub\Message\ForwardableMessage;
+use PhPhD\Pipeline\Tests\Basic\Stub\Message\NextForwardableMessage;
+use PhPhD\Pipeline\Tests\Basic\Stub\Message\NoopMessage;
+use PhPhD\Pipeline\Tests\Basic\Stub\Message\OriginalMessage;
+use PhPhD\Pipeline\Tests\Basic\Stub\Message\ScalarResultMessage;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+use Symfony\Component\Messenger\Handler\HandlersLocator;
+use Symfony\Component\Messenger\MessageBus;
+use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
+
+use function PhPhD\Pipeline\Messenger\getStampsAsFlatList;
+
+/**
+ * @internal
+ *
+ * @covers \PhPhD\Pipeline\PipeForward
+ * @covers \PhPhD\Pipeline\Messenger\ForwardingMiddleware
+ * @covers \PhPhD\Pipeline\Messenger\getStampsAsFlatList
+ */
+final class BasicPipelineForwardingMiddlewareUsageTest extends TestCase
+{
+    private MessageBus $messageBus;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->messageBus = new MessageBus([
+            new ForwardingMiddleware(),
+            new HandleMessageMiddleware(new HandlersLocator([
+                OriginalMessage::class => [
+                    static fn (): ForwardableMessage => new ForwardableMessage(),
+                ],
+                ForwardableMessage::class => [
+                    static fn (): NextForwardableMessage => new NextForwardableMessage(),
+                ],
+                NextForwardableMessage::class => [
+                    static fn (): string => 'final result',
+                ],
+                ScalarResultMessage::class => [
+                    static fn (): int => 1335,
+                ],
+                stdClass::class => [
+                    static fn (): OriginalMessage => new OriginalMessage(),
+                ],
+            ]), true),
+        ]);
+    }
+
+    public function testForwardsMessagesPreservingHandledStamps(): void
+    {
+        $envelope = $this->messageBus->dispatch(new OriginalMessage());
+
+        /** @var HandledStamp[] $handledStamps */
+        $handledStamps = getStampsAsFlatList($envelope);
+
+        self::assertContainsOnlyInstancesOf(HandledStamp::class, $handledStamps);
+        self::assertCount(3, $handledStamps);
+
+        [$firstHandled, $secondHandled, $thirdHandled] = $handledStamps;
+
+        self::assertInstanceOf(ForwardableMessage::class, $firstHandled->getResult());
+        self::assertSame('Closure', $firstHandled->getHandlerName());
+
+        self::assertInstanceOf(NextForwardableMessage::class, $secondHandled->getResult());
+        self::assertSame('Closure', $secondHandled->getHandlerName());
+
+        self::assertSame('final result', $thirdHandled->getResult());
+        self::assertSame('Closure', $thirdHandled->getHandlerName());
+    }
+
+    public function testAllowsNoHandlers(): void
+    {
+        $envelope = $this->messageBus->dispatch(new NoopMessage());
+
+        self::assertSame([], $envelope->all());
+    }
+
+    public function testForwardAttributeIsIgnoredWhenHandlerReturnsScalarResult(): void
+    {
+        $envelope = $this->messageBus->dispatch(new ScalarResultMessage());
+
+        /** @var HandledStamp[] $handledStamps */
+        $handledStamps = $envelope->all(HandledStamp::class);
+
+        self::assertCount(1, $handledStamps);
+
+        [$handledStamp] = $handledStamps;
+
+        self::assertSame(1335, $handledStamp->getResult());
+    }
+
+    public function testDoesNotForwardMessageWithoutAttribute(): void
+    {
+        $envelope = $this->messageBus->dispatch(new stdClass());
+
+        /** @var HandledStamp[] $handledStamps */
+        $handledStamps = getStampsAsFlatList($envelope);
+
+        self::assertContainsOnlyInstancesOf(HandledStamp::class, $handledStamps);
+        self::assertCount(1, $handledStamps);
+
+        [$handledStamp] = $handledStamps;
+
+        self::assertInstanceOf(OriginalMessage::class, $handledStamp->getResult());
+    }
+}

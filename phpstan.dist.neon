@@ -1,0 +1,18 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/tomasvotruba/type-coverage/config/extension.neon
+
+parameters:
+    level: 9
+    phpVersion: 80213
+    editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
+    excludePaths:
+        analyseAndScan:
+            - vendor
+    type_coverage:
+        return_type: 100
+        param_type: 100
+        property_type: 100
+    fileExtensions:
+        - 'php'
