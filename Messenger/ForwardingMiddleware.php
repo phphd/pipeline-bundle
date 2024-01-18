@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhPhD\Pipeline\Messenger;
+namespace PhPhD\PipelineBundle\Messenger;
 
 use PhPhD\Pipeline\PipeForward;
 use ReflectionClass;

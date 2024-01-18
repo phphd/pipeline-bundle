@@ -17,12 +17,14 @@
         "symfony/http-kernel": "^6.0 | ^7.0"
     },
     "require-dev": {
-        "phphd/coding-standard": "~0.4.0",
+        "phphd/coding-standard": "~0.5.0",
         "phpunit/phpunit": "^10.1",
         "symfony/var-dumper": "^6.0 | ^7.0",
         "tomasvotruba/type-coverage": "^0.2.1",
         "phpstan/phpstan-phpunit": "^1.3",
-        "psalm/plugin-phpunit": "^0.18.4"
+        "psalm/plugin-phpunit": "^0.18.4",
+        "nyholm/symfony-bundle-test": "^3.0",
+        "phpstan/phpstan": "^1.10"
     },
     "repositories": [
         {
@@ -41,7 +43,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "PhPhD\\Pipeline\\Tests\\": "tests/"
+            "PhPhD\\PipelineBundle\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -50,14 +52,17 @@
             "@ci:rector",
             "@ci:phpstan",
             "@ci:psalm",
-            "@ci:test"
+            "@ci:unit-test",
+            "@ci:integration-test"
         ],
         "ci:ecs": "vendor/bin/ecs check",
         "ci:ecs-fix": "vendor/bin/ecs check --fix",
-        "ci:rector": "vendor/bin/rector process --dry-run",
+        "ci:rector": "vendor/bin/rector process --dry-run -vv",
         "ci:rector-fix": "vendor/bin/rector process",
         "ci:phpstan": "vendor/bin/phpstan analyze ./",
         "ci:psalm": "vendor/bin/psalm",
-        "ci:test": "vendor/bin/phpunit --testdox --colors=always"
+        "ci:test": "vendor/bin/phpunit --testdox --colors=always",
+        "ci:unit-test": "vendor/bin/phpunit --testdox --colors=always --testsuite=Unit",
+        "ci:integration-test": "vendor/bin/phpunit --testdox --colors=always --testsuite=Integration"
     }
 }

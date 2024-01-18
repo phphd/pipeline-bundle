@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhPhD\Pipeline\Tests\Recursion\Stub\Message;
+namespace PhPhD\PipelineBundle\Tests\Unit\Recursion\Stub\Message;
 
 use PhPhD\Pipeline\PipeForward;
 

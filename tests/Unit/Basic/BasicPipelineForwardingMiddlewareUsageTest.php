@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PhPhD\Pipeline\Tests\Basic;
+namespace PhPhD\PipelineBundle\Tests\Unit\Basic;
 
-use PhPhD\Pipeline\Messenger\ForwardingMiddleware;
-use PhPhD\Pipeline\Tests\Basic\Stub\Message\ForwardableMessage;
-use PhPhD\Pipeline\Tests\Basic\Stub\Message\NextForwardableMessage;
-use PhPhD\Pipeline\Tests\Basic\Stub\Message\NoopMessage;
-use PhPhD\Pipeline\Tests\Basic\Stub\Message\OriginalMessage;
-use PhPhD\Pipeline\Tests\Basic\Stub\Message\ScalarResultMessage;
+use PhPhD\PipelineBundle\Messenger\ForwardingMiddleware;
+use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\ForwardableMessage;
+use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\NextForwardableMessage;
+use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\NoopMessage;
+use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\OriginalMessage;
+use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\ScalarResultMessage;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
@@ -17,14 +17,14 @@ use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
-use function PhPhD\Pipeline\Messenger\getStampsAsFlatList;
+use function PhPhD\PipelineBundle\Messenger\getStampsAsFlatList;
 
 /**
  * @internal
  *
  * @covers \PhPhD\Pipeline\PipeForward
- * @covers \PhPhD\Pipeline\Messenger\ForwardingMiddleware
- * @covers \PhPhD\Pipeline\Messenger\getStampsAsFlatList
+ * @covers \PhPhD\PipelineBundle\Messenger\ForwardingMiddleware
+ * @covers \PhPhD\PipelineBundle\Messenger\getStampsAsFlatList
  */
 final class BasicPipelineForwardingMiddlewareUsageTest extends TestCase
 {

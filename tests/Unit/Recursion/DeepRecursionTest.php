@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PhPhD\Pipeline\Tests\Recursion;
+namespace PhPhD\PipelineBundle\Tests\Unit\Recursion;
 
-use PhPhD\Pipeline\Messenger\ForwardingMiddleware;
-use PhPhD\Pipeline\Tests\Recursion\Stub\Handler\PingPongHandler;
-use PhPhD\Pipeline\Tests\Recursion\Stub\Message\Ping;
-use PhPhD\Pipeline\Tests\Recursion\Stub\Message\Pong;
+use PhPhD\PipelineBundle\Messenger\ForwardingMiddleware;
+use PhPhD\PipelineBundle\Tests\Unit\Recursion\Stub\Handler\PingPongHandler;
+use PhPhD\PipelineBundle\Tests\Unit\Recursion\Stub\Message\Ping;
+use PhPhD\PipelineBundle\Tests\Unit\Recursion\Stub\Message\Pong;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\MessageBus;
@@ -15,14 +15,14 @@ use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 use function array_map;
-use function PhPhD\Pipeline\Messenger\getStampsAsFlatList;
+use function PhPhD\PipelineBundle\Messenger\getStampsAsFlatList;
 
 /**
  * @internal
  *
  * @covers \PhPhD\Pipeline\PipeForward
- * @covers \PhPhD\Pipeline\Messenger\ForwardingMiddleware
- * @covers \PhPhD\Pipeline\Messenger\getStampsAsFlatList
+ * @covers \PhPhD\PipelineBundle\Messenger\ForwardingMiddleware
+ * @covers \PhPhD\PipelineBundle\Messenger\getStampsAsFlatList
  */
 final class DeepRecursionTest extends TestCase
 {

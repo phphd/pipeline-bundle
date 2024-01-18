@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhPhD\Pipeline\Tests\Recursion\Stub\Handler;
+namespace PhPhD\PipelineBundle\Tests\Unit\Recursion\Stub\Handler;
 
-use PhPhD\Pipeline\Tests\Recursion\Stub\Message\Ping;
-use PhPhD\Pipeline\Tests\Recursion\Stub\Message\Pong;
+use PhPhD\PipelineBundle\Tests\Unit\Recursion\Stub\Message\Ping;
+use PhPhD\PipelineBundle\Tests\Unit\Recursion\Stub\Message\Pong;
 
 final class PingPongHandler
 {

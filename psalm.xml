@@ -10,9 +10,9 @@
 >
     <projectFiles>
         <directory name="./"/>
-        <file name="PhdPipelineBundle.php"/>
         <ignoreFiles>
             <directory name="vendor"/>
+            <file name="rector.php"/>
         </ignoreFiles>
     </projectFiles>
     <plugins>

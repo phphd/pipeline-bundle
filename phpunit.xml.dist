@@ -10,14 +10,22 @@
          failOnRisky="true"
          failOnWarning="true">
     <testsuites>
-        <testsuite name="default">
-            <directory>tests</directory>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory>tests/Integration</directory>
         </testsuite>
     </testsuites>
     <source>
         <include>
-            <directory>src</directory>
-            <directory>DependencyInjection</directory>
+            <directory>.</directory>
         </include>
+        <exclude>
+            <directory>vendor</directory>
+            <directory>tests</directory>
+            <file>rector.php</file>
+            <file>ecs.php</file>
+        </exclude>
     </source>
 </phpunit>

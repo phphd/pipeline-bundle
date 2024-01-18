@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhPhD\Pipeline\Tests\Basic\Stub\Message;
+namespace PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message;
 
 final class NoopMessage
 {
