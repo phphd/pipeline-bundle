@@ -6,10 +6,11 @@ It enables streamlined chaining of the messages created by message handlers. For
 message (msg1), it creates a subsequent message (msg2), triggering the invocation of the next
 handler (hdl2), which may, in turn, produce yet another new message, and this cycle continues.
 
-[![Build Status](https://github.com/phphd/pipeline-bundle/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/phphd/pipeline-bundle/actions?query=branch%3Amain)
-[![Psalm level](https://shepherd.dev/github/phphd/pipeline-bundle/level.svg)](https://shepherd.dev/github/phphd/pipeline-bundle)
-[![Psalm coverage](https://shepherd.dev/github/phphd/pipeline-bundle/coverage.svg)](https://shepherd.dev/github/phphd/pipeline-bundle)
 [![Codecov](https://codecov.io/gh/phphd/pipeline-bundle/graph/badge.svg?token=GZRXWYT55Z)](https://codecov.io/gh/phphd/pipeline-bundle)
+[![Psalm coverage](https://shepherd.dev/github/phphd/pipeline-bundle/coverage.svg)](https://shepherd.dev/github/phphd/pipeline-bundle)
+[![Psalm level](https://shepherd.dev/github/phphd/pipeline-bundle/level.svg)](https://shepherd.dev/github/phphd/pipeline-bundle)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/phphd/pipeline-bundle/ci.yaml?branch=main)](https://github.com/phphd/pipeline-bundle/actions?query=branch%3Amain)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/phphd/pipeline-bundle.svg)](https://packagist.org/packages/phphd/pipeline-bundle)
 [![Licence](https://img.shields.io/github/license/phphd/pipeline-bundle.svg)](https://github.com/phphd/pipeline-bundle/blob/main/LICENSE)
 
 ## Installation 📥
