@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhPhD\PipelineBundle\Messenger;
 
-use PhPhD\Pipeline\PipeForward;
+use PhPhD\Pipeline\NextForwarded;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\Messenger\Envelope;
@@ -18,7 +18,7 @@ use function array_values;
 use function end;
 use function is_object;
 
-final class ForwardingMiddleware implements MiddlewareInterface
+final class ForwardChainMiddleware implements MiddlewareInterface
 {
     /** @throws ReflectionException */
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
@@ -34,17 +34,17 @@ final class ForwardingMiddleware implements MiddlewareInterface
             return $handledEnvelope;
         }
 
-        $forwardMessage = end($handledStamps)->getResult();
+        $nextMessage = end($handledStamps)->getResult();
 
-        if (!is_object($forwardMessage)) {
+        if (!is_object($nextMessage)) {
             return $handledEnvelope;
         }
 
-        if (!$this->isForwardable($forwardMessage)) {
+        if (!$this->shouldBeForwarded($nextMessage)) {
             return $handledEnvelope;
         }
 
-        $forwardEnvelope = $this->wrapForwardEnvelope($handledEnvelope, $forwardMessage);
+        $forwardEnvelope = $this->wrapForwardEnvelope($handledEnvelope, $nextMessage);
 
         $resultEnvelope = $this->handle($forwardEnvelope, $forwardStack);
 
@@ -58,11 +58,11 @@ final class ForwardingMiddleware implements MiddlewareInterface
         ;
     }
 
-    private function isForwardable(object $message): bool
+    private function shouldBeForwarded(object $nextMessage): bool
     {
-        $reflectionClass = new ReflectionClass($message);
+        $reflectionClass = new ReflectionClass($nextMessage);
 
-        $attributes = $reflectionClass->getAttributes(PipeForward::class);
+        $attributes = $reflectionClass->getAttributes(NextForwarded::class);
 
         return [] !== $attributes;
     }

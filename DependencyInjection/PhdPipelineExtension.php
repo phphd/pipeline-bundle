@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhPhD\PipelineBundle\DependencyInjection;
 
-use PhPhD\PipelineBundle\Messenger\ForwardingMiddleware;
+use PhPhD\PipelineBundle\Messenger\ForwardChainMiddleware;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 
@@ -19,10 +19,10 @@ final class PhdPipelineExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $container->register('phd_pipeline.forwarding', ForwardingMiddleware::class);
+        $container->register('phd_pipeline.forward_chain', ForwardChainMiddleware::class);
 
         if ('test' === $container->getParameter('kernel.environment')) {
-            $container->getDefinition('phd_pipeline.forwarding')->setPublic(true);
+            $container->getDefinition('phd_pipeline.forward_chain')->setPublic(true);
         }
     }
 

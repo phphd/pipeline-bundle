@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhPhD\PipelineBundle\Tests\Integration;
 
-use PhPhD\PipelineBundle\Messenger\ForwardingMiddleware;
+use PhPhD\PipelineBundle\Messenger\ForwardChainMiddleware;
 
 /**
  * @covers \PhPhD\PipelineBundle\PhdPipelineBundle
@@ -18,8 +18,8 @@ final class DependencyInjectionTest extends TestCase
     {
         $container = self::getContainer();
 
-        $forwardingMiddleware = $container->get('phd_pipeline.forwarding');
+        $forwardingMiddleware = $container->get('phd_pipeline.forward_chain');
 
-        self::assertInstanceOf(ForwardingMiddleware::class, $forwardingMiddleware);
+        self::assertInstanceOf(ForwardChainMiddleware::class, $forwardingMiddleware);
     }
 }

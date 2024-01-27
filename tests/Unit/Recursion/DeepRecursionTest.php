@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhPhD\PipelineBundle\Tests\Unit\Recursion;
 
-use PhPhD\PipelineBundle\Messenger\ForwardingMiddleware;
+use PhPhD\PipelineBundle\Messenger\ForwardChainMiddleware;
 use PhPhD\PipelineBundle\Tests\Unit\Recursion\Stub\Handler\PingPongHandler;
 use PhPhD\PipelineBundle\Tests\Unit\Recursion\Stub\Message\Ping;
 use PhPhD\PipelineBundle\Tests\Unit\Recursion\Stub\Message\Pong;
@@ -20,8 +20,8 @@ use function PhPhD\PipelineBundle\Messenger\getStampsAsFlatList;
 /**
  * @internal
  *
- * @covers \PhPhD\Pipeline\PipeForward
- * @covers \PhPhD\PipelineBundle\Messenger\ForwardingMiddleware
+ * @covers \PhPhD\Pipeline\NextForwarded
+ * @covers \PhPhD\PipelineBundle\Messenger\ForwardChainMiddleware
  * @covers \PhPhD\PipelineBundle\Messenger\getStampsAsFlatList
  */
 final class DeepRecursionTest extends TestCase
@@ -35,7 +35,7 @@ final class DeepRecursionTest extends TestCase
         $pingPongHandler = new PingPongHandler();
 
         $this->messageBus = new MessageBus([
-            new ForwardingMiddleware(),
+            new ForwardChainMiddleware(),
             new HandleMessageMiddleware(new HandlersLocator([
                 Ping::class => [$pingPongHandler],
                 Pong::class => [$pingPongHandler],

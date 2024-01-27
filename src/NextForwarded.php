@@ -7,6 +7,6 @@ namespace PhPhD\Pipeline;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-final class PipeForward
+final class NextForwarded
 {
 }

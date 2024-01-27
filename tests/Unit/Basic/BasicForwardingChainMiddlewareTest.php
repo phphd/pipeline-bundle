@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PhPhD\PipelineBundle\Tests\Unit\Basic;
 
-use PhPhD\PipelineBundle\Messenger\ForwardingMiddleware;
-use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\ForwardableMessage;
-use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\NextForwardableMessage;
+use PhPhD\PipelineBundle\Messenger\ForwardChainMiddleware;
+use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\FirstForwardedMessage;
+use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\SecondForwardedMessage;
 use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\NoopMessage;
 use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\OriginalMessage;
 use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\ScalarResultMessage;
@@ -22,11 +22,11 @@ use function PhPhD\PipelineBundle\Messenger\getStampsAsFlatList;
 /**
  * @internal
  *
- * @covers \PhPhD\Pipeline\PipeForward
- * @covers \PhPhD\PipelineBundle\Messenger\ForwardingMiddleware
+ * @covers \PhPhD\Pipeline\NextForwarded
+ * @covers \PhPhD\PipelineBundle\Messenger\ForwardChainMiddleware
  * @covers \PhPhD\PipelineBundle\Messenger\getStampsAsFlatList
  */
-final class BasicPipelineForwardingMiddlewareUsageTest extends TestCase
+final class BasicForwardingChainMiddlewareTest extends TestCase
 {
     private MessageBus $messageBus;
 
@@ -35,15 +35,15 @@ final class BasicPipelineForwardingMiddlewareUsageTest extends TestCase
         parent::setUp();
 
         $this->messageBus = new MessageBus([
-            new ForwardingMiddleware(),
+            new ForwardChainMiddleware(),
             new HandleMessageMiddleware(new HandlersLocator([
                 OriginalMessage::class => [
-                    static fn (): ForwardableMessage => new ForwardableMessage(),
+                    static fn (): FirstForwardedMessage => new FirstForwardedMessage(),
                 ],
-                ForwardableMessage::class => [
-                    static fn (): NextForwardableMessage => new NextForwardableMessage(),
+                FirstForwardedMessage::class => [
+                    static fn (): SecondForwardedMessage => new SecondForwardedMessage(),
                 ],
-                NextForwardableMessage::class => [
+                SecondForwardedMessage::class => [
                     static fn (): string => 'final result',
                 ],
                 ScalarResultMessage::class => [
@@ -68,10 +68,10 @@ final class BasicPipelineForwardingMiddlewareUsageTest extends TestCase
 
         [$firstHandled, $secondHandled, $thirdHandled] = $handledStamps;
 
-        self::assertInstanceOf(ForwardableMessage::class, $firstHandled->getResult());
+        self::assertInstanceOf(FirstForwardedMessage::class, $firstHandled->getResult());
         self::assertSame('Closure', $firstHandled->getHandlerName());
 
-        self::assertInstanceOf(NextForwardableMessage::class, $secondHandled->getResult());
+        self::assertInstanceOf(SecondForwardedMessage::class, $secondHandled->getResult());
         self::assertSame('Closure', $secondHandled->getHandlerName());
 
         self::assertSame('final result', $thirdHandled->getResult());

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message;
 
-use PhPhD\Pipeline\PipeForward;
+use PhPhD\Pipeline\NextForwarded;
 
-#[PipeForward]
-final class NextForwardableMessage
+#[NextForwarded]
+final class FirstForwardedMessage
 {
 }

@@ -29,7 +29,7 @@ handler (hdl2), which may, in turn, produce yet another new message, and this cy
 ## Configuration ⚒️
 
 To leverage chain of pipelined handlers for your command/query buses, 
-you should add `phd_pipeline.forwarding` middleware to the list:
+you should add `phd_pipeline.forward_chain` middleware to the list:
 
 ```diff
 framework:
@@ -38,11 +38,11 @@ framework:
             command.bus:
                 middleware:
                     - doctrine_transaction
-+                   - phd_pipeline.forwarding
++                   - phd_pipeline.forward_chain
                     - validation
             query.bus:
                 middleware:
-+                   - phd_pipeline.forwarding
++                   - phd_pipeline.forward_chain
                     - validation
 ```
 
@@ -88,12 +88,12 @@ initially. Thereof, instead of scalar types, it has business objects (e.g. `Vaca
 of `$vacationTypeId` scalar). Basically, new class no longer merely represents the DTO. It now embodies the complete
 domain object.
 
-You should add `#[PipeForward]` _attribute to enable forwarding_ of this new message to the next handler:
+You should add `#[NextForwarded]` _attribute to enable forwarding_ of this new message to the next handler:
 
 ```php
-use PhPhD\Pipeline\PipeForward;
+use PhPhD\Pipeline\NextForwarded;
 
-#[PipeForward]
+#[NextForwarded]
 final readonly class CreateVacationRequestCommand
 {
     public function __construct(
@@ -105,7 +105,7 @@ final readonly class CreateVacationRequestCommand
 }
 ```
 
-> Messages lacking `#[PipeForward]` attribute will not be pipelined. This attribute must be put on each message
+> Messages lacking `#[NextForwarded]` attribute will not be forwarded. This attribute must be put on each message
 > expected of redispatching.
 
 Finally, one _ultimate handler_ must implement the core business logic.
