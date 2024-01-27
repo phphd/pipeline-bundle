@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PhPhD\CodingStandard\ValueObject\Set\PhdSetList;
 use Rector\Config\RectorConfig;
-use Rector\Core\ValueObject\PhpVersion;
+use Rector\ValueObject\PhpVersion;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([__DIR__.'/']);
