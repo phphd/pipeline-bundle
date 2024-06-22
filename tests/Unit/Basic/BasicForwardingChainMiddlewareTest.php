@@ -6,10 +6,10 @@ namespace PhPhD\PipelineBundle\Tests\Unit\Basic;
 
 use PhPhD\PipelineBundle\Messenger\ForwardChainMiddleware;
 use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\FirstForwardedMessage;
-use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\SecondForwardedMessage;
 use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\NoopMessage;
 use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\OriginalMessage;
 use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\ScalarResultMessage;
+use PhPhD\PipelineBundle\Tests\Unit\Basic\Stub\Message\SecondForwardedMessage;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Symfony\Component\Messenger\Handler\HandlersLocator;

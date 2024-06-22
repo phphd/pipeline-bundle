@@ -29,7 +29,7 @@ handler (hdl2), which may, in turn, produce yet another new message, and this cy
 
 ## Configuration ⚒️
 
-To leverage chain of pipelined handlers for your command/query buses, 
+To leverage chain of pipelined handlers for your command/query buses,
 you should add `phd_pipeline.forward_chain` middleware to the list:
 
 ```diff
@@ -124,5 +124,27 @@ final readonly class CreateVacationRequestHandler
 ```
 
 > You may chain as many message handlers as needed, even in a recursive manner,
-> by returning an instance of the same class as the original message, 
+> by returning an instance of the same class as the original message,
 > provided that it has the forwarding attribute enabled.
+
+## Extended forwarding
+
+If you don't want to use the attribute on the message class, you don't have to. There could be some cases when you'd
+like to apply some dynamic configurations for `NextForwarded` instance. In such cases, you can return an instance of
+`NextForwarded` class right from the handler method:
+
+```php
+#[AsMessageHandler(bus: 'command.bus')]
+final readonly class ConvertVacationRequestCommandHandler
+{
+    /** @return NextForwarded<CreateVacationRequestCommand> */
+    public function __invoke(CreateVacationRequestCommandDto $dto): NextForwarded
+    {
+        return new NextForwarded($this->createCommandFromDto($dto));
+    }
+}
+```
+
+The code above is no different from the one shown earlier.
+
+
