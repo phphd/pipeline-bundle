@@ -34,11 +34,13 @@ final class ForwardChainMiddleware implements MiddlewareInterface
             return $handledEnvelope;
         }
 
-        $nextMessage = end($handledStamps)->getResult();
+        $result = end($handledStamps)->getResult();
 
-        if (!is_object($nextMessage)) {
+        if (!is_object($result)) {
             return $handledEnvelope;
         }
+
+        $nextMessage = $this->getNextMessage($result);
 
         if (!$this->shouldBeForwarded($nextMessage)) {
             return $handledEnvelope;
@@ -58,15 +60,6 @@ final class ForwardChainMiddleware implements MiddlewareInterface
         ;
     }
 
-    private function shouldBeForwarded(object $nextMessage): bool
-    {
-        $reflectionClass = new ReflectionClass($nextMessage);
-
-        $attributes = $reflectionClass->getAttributes(NextForwarded::class);
-
-        return [] !== $attributes;
-    }
-
     /** @param list<HandledStamp> $handledStamps */
     private function prependHandledStamps(Envelope $envelope, array $handledStamps): Envelope
     {
@@ -79,6 +72,34 @@ final class ForwardChainMiddleware implements MiddlewareInterface
             ->withoutAll(HandledStamp::class)
             ->with(...$resultHandledStamps)
         ;
+    }
+
+    private function getNextMessage(object $result): ?object
+    {
+        if ($result instanceof NextForwarded) {
+            return $result->getMessage();
+        }
+
+        if ($this->hasForwardingAttribute($result)) {
+            return $result;
+        }
+
+        return null;
+    }
+
+    private function hasForwardingAttribute(object $message): bool
+    {
+        $reflectionClass = new ReflectionClass($message);
+
+        $attributes = $reflectionClass->getAttributes(NextForwarded::class);
+
+        return [] !== $attributes;
+    }
+
+    /** @psalm-assert-if-true !null $nextMessage */
+    private function shouldBeForwarded(?object $nextMessage): bool
+    {
+        return null !== $nextMessage;
     }
 }
 
